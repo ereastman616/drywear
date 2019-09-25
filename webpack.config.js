@@ -15,8 +15,8 @@ module.exports = {
     hot: true,
     publicPath: path.resolve(__dirname, '/dist'),
     proxy: {
-      context: ['/api', '/login', '/signup'],
-      target: 'http://[::1]:3000'
+      context: ['/api', '/signup', '/login'],
+      target: 'http://localhost:3000'
     },
     historyApiFallback: true,
   },
