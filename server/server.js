@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = 3000;
 const multer = require('multer');
+const loginRouter = require('./routes/login');
+const signupRouter = require('./routes/signup');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -26,6 +28,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
+
 app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => {
   res.status(200).json(res.locals);
 });
@@ -41,14 +46,16 @@ app.post('/api/items', upload.single('image'), itemsController.addItem, (req, re
   res.status(409).json('no files')
 });
 
-app.get('/api/uploads/:file', itemsController.getUploads, (req, res) => {
-  res.sendFile(path.resolve(__dirname, './uploads/', req.params.file))
-});
+// app.get('/api/uploads/:file', itemsController.getUploads, (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './uploads/', req.params.file))
+// });
 
 app.post('/api/outfits', outfitsController.saveOutfit, itemsController.updateItemsDate, (req, res) => {
   res.status(200).send('Saved outfit and updated items date.');
 });
 
+// if whether is selcted, filter and set outfit by selected string(cold or hot for now).
+// 
 app.post('/api/filterOutfits', itemsController.filterOutfits, outfitsController.setOutfits, (req, res) => {
   res.status(200).json(res.locals.outfits);
 });

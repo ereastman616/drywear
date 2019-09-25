@@ -2,6 +2,7 @@ const { pool } = require('../config')
 
 const outfitsController = {};
 
+
 outfitsController.setOutfits = (req, res, next) => {
 
     res.locals.outfits = [];
