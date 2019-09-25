@@ -9,21 +9,21 @@ userController.verifyUser = (req, res, next) => {
 
     pool.query('SELECT * FROM "user" WHERE username = $1', [username], (err, result) => {
         if (err || !result) {
-            console.log('No such username')
-            // res.redirect('/login');
-            return;
+            return next({
+                log: `userController.verifyUser: ERROR: ${err}`,
+                message: { err: 'userController.verifyUser: ERROR: Check server logs for details'}
+            });
         }
         
         bcrypt.compare(req.body.password, result.rows[0].password, (err, isMatch) => {
             if (err || !isMatch) {
-                console.log('Wrong password')
-                // res.redirect('/login');
-                return; 
+                return next({
+                    log: `userController.verifyUser: ERROR: ${err}`,
+                    message: { err: 'userController.verifyUser: ERROR: Check server logs for details'}
+                });
             }
-
+    
             if (isMatch) {
-                console.log('Right password!')
-                // res.redirect('/');
                 return next();
             }
         });

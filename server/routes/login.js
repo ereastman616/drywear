@@ -3,7 +3,7 @@ const router = express.Router();
 const usercontroller = require("../controllers/userController");
 
 router.get("/", usercontroller.verifyUser, (req, res) => {
-    return res.json();
+    return res.status(200).json("verified");
 });
 
 
