@@ -24,7 +24,7 @@ userController.verifyUser = (req, res, next) => {
                     message: { err: 'userController.verifyUser: ERROR: Check server logs for details' }
                 }); 
             }
-
+    
             if (isMatch) {
                 res.locals.sessionId = result.rows[0]._id;
                 // res.redirect('/');
