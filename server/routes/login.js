@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const usercontroller = require("../controllers/userController");
+const userController = require("../controllers/userController");
 
-router.get("/", usercontroller.verifyUser, (req, res) => {
+router.get("/", userController.verifyUser, userController.startSession, userController.setSSIDCookie, (req, res) => {
     return res.json();
 });
 

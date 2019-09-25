@@ -34,6 +34,7 @@ app.use(cors());
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 
+
 /* sends back today's outfit (date, ids and images) if there is one and a boolean in res.locals */
 app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => {
   res.status(200).json(res.locals);

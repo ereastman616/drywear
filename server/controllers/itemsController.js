@@ -5,8 +5,8 @@ const itemsController = {};
 
 
 itemsController.getItems = (req, res, next) => {
-
-  pool.query('SELECT * FROM items', (err, results) => {
+  const user = req.body.username;
+  pool.query('SELECT * FROM items WHERE user = $1', [user], (err, results) => {
     if (err) {
       res.send(err)
       throw err
