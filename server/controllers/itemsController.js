@@ -38,23 +38,29 @@ itemsController.availableItems = (req, res, next) => {
 
 itemsController.filterOutfits = (req, res, next) => {
 
-  let filter;
-  // console.log(req.body)
+  let filter = '';
+
+  // when the whether option is selected, add the condition to the query
   if (req.body.weather) {
     filter = ` AND weather = '${req.body.weather.value}' `;
   }
 
-  pool.query(`SELECT * FROM items WHERE type='shoes'`)
+  // create items object to store the filtered shoes, bottoms, and tops
+  // and stores in res.locals then pass to the next midware
+  pool.query(`SELECT * FROM items WHERE type='shoes'${filter}`)
     .then(results => {
+      // results contains all the shoes that has same whether value with passed one
       res.locals.items = {};
       res.locals.items.shoes = results.rows;
       return pool.query(`SELECT * FROM items WHERE type = 'top'${filter}AND date < NOW() - INTERVAL '7 days'`)
     })
     .then(results => {
+      // results contains all the tops that has same whether value with passed one
       res.locals.items.tops = results.rows;
       return pool.query(`SELECT * FROM items WHERE type = 'bottom'${filter}AND date < NOW() - INTERVAL '7 days'`)
     })
     .then(results => {
+      // results contains all the bottoms that has same whether value with passed one
       res.locals.items.bottoms = results.rows;
       next();
     })
