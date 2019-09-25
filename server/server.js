@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = 3000;
 const multer = require('multer');
+const loginRouter = require('./routes/login');
+const signupRouter = require('./routes/signup');
 
 /* multer method is passed object with destination and filename properties with functions as values
 object returned is stored as storage
@@ -28,6 +30,9 @@ const historyController = require('./controllers/historyController');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
+
+app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
 
 /* sends back today's outfit (date, ids and images) if there is one and a boolean in res.locals */
 app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => {
@@ -56,7 +61,7 @@ app.post('/api/outfits', outfitsController.saveOutfit, itemsController.updateIte
   res.status(200).send('Saved outfit and updated items date.');
 });
 
-// Darren commenting
+// if whether is selcted, filter and set outfit by selected string(cold or hot for now).
 app.post('/api/filterOutfits', itemsController.filterOutfits, outfitsController.setOutfits, (req, res) => {
   res.status(200).json(res.locals.outfits);
 });
