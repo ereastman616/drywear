@@ -94,7 +94,6 @@ app.use((err, req, res, next) => {
     status: 400,
     message: 'An error occurred',
   };
-  console.log('this is err', err)
   const errObj = Object.assign(defaultError, err);
   console.error(errObj.log);
   res.status(errObj.status).json(errObj.message);
