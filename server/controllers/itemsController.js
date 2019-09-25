@@ -96,10 +96,10 @@ itemsController.updateItemDates  = (req, res, next) => {
 
 // properties sent from the client in req.body are inserted into database
 itemsController.addItem = (req, res, next) => {
-
+  const { secure_url } = req.file;
   const {color, type, weather, isFormal} = req.body;
 
-  pool.query(`INSERT INTO items (file, type, weather, formal, color) VALUES('${req.file.filename}', '${type}', '${weather}', '${isFormal}', '${color}')`)
+  pool.query(`INSERT INTO items (image, file, type, weather, formal, color) VALUES('${secure_url}', '${req.file.filename}', '${type}', '${weather}', '${isFormal}', '${color}')`)
     .then(resp =>{
       console.log('successful img upload to db!', resp);
       return next();

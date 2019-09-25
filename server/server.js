@@ -8,10 +8,29 @@ const multer = require('multer');
 const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
 
+// Cloudinarty.com image hosting modules 
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "boxer",
+  allowedFormats: ["jpg", "png"],
+});
+
 /* multer method is passed object with destination and filename properties with functions as values
 object returned is stored as storage
 */
-const storage = multer.diskStorage({
+
+
+
+/*const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.resolve(__dirname, './uploads'))
   },
@@ -19,6 +38,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname)
   }
 });
+*/
 
 const upload = multer({ storage });
 
@@ -47,10 +67,20 @@ app.get('/api/outfits', itemsController.availableItems, outfitsController.setOut
 // cannot upload a new image without getting 400 error
 // returns an image url
 app.post('/api/items', upload.single('image'), itemsController.addItem, (req, res) => {
+  console.dir('res.headersSent = ' + res.headersSent);
   if (req.file) {
-    return res.json({imageUrl: `api/uploads/${req.file.filename}`});
+    //return res.json({imageUrl: `api/uploads/${req.file.filename}`});
+    //console.log('app.post return with req.file !== undefined.')
+    //res.json({imageUrl: `api/uploads/${req.file.filename}`});
+    //res.sendStatus(201);
+    //res.status(201).send('Saved outfit and updated items date.');
+    //res.redirect(req.get('referer'));
+    res.set('Content-Type', 'application/JSON');
+    res.status(201);
+    res.send();
+  } else {
+    res.status(409).json('no files');
   }
-  res.status(409).json('no files')
 });
 
 // app.get('/api/uploads/:file', itemsController.getUploads, (req, res) => {

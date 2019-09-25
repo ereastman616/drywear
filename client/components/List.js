@@ -31,6 +31,7 @@ class List extends Component {
     this.setColor = this.setColor.bind(this);
     this.setWeather = this.setWeather.bind(this);
     this.setFormal = this.setFormal.bind(this);
+    this.reloadAfterAddItem = this.reloadAfterAddItem.bind(this);
   }
 
   componentDidMount() {
@@ -45,13 +46,27 @@ class List extends Component {
     if (!this.state.selected) {
       axios.get('/api/items')
       .then(response => {
+ 
         this.setState ({
           items: response.data
         })
+
       }).catch(error => {
         console.log(error, '- Get outfit selections');
       })
      }
+   }
+
+   reloadAfterAddItem() {
+     axios.get('/api/items')
+          .then(response => {
+             this.setState ({
+               items: response.data
+             })
+            })
+          .catch(error => {
+             console.log(error, '- Get outfit selections');
+            })
    }
 
   selectImages(event) {
@@ -72,11 +87,15 @@ class List extends Component {
     // Make an AJAX upload request using Axios
     axios.post('/api/items', data)
       .then(response => {
+        console.log('handleSubmit > axios.post > response');
         this.setState({
           imageUrl: response.data.imageUrl,
         });
+        this.reloadAfterAddItem(); 
       })
       .catch(err => alert(err.message));
+
+      
   }
 
   handleSelectItemType(type) {
@@ -101,6 +120,8 @@ class List extends Component {
       this.setState({isFormal: false}, () => console.log('in setisFormal', event.target.value))
     }
   }
+
+
 
   render() {
     const tops = [];
@@ -180,7 +201,8 @@ class List extends Component {
   }
 }
 
-function indvoutfit(props){
-  return <img className = "listimage" src={props.image} />
+function indvoutfit({image}){
+  return <img className = "listimage" src={image} key={image}/>
 }
+
 export default List;
