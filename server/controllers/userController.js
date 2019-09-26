@@ -80,19 +80,33 @@ userController.startSession = (req, res, next) => {
 
 userController.setSSIDCookie = (req, res, next) => {
     console.log(`Redirect to home page - cookieId is ${res.locals.sessionId}`);
-    res.cookie('ssid', res.locals.sessionId, {httpOnly: true});
-    
+    res.cookie('ssid', res.locals.sessionId, {expires: new Date(Date.now() + 30000), httpOnly: true});
+    return next();
 }
 
 userController.isLoggedIn = (req, res, next) => {
     pool.query('SELECT * FROM "sessions" WHERE "cookie_id" = $1', [req.cookies.ssid], (err, result) => {
         if (err) {
-            return next({
-                log: `userController.isLoggedIn: ERROR: ${err}`,
-                message: { err: 'userController.isLoggedIn: ERROR: Check server logs for details' }
+            res.locals.isLoggedIn = false;
+            // return next({
+            //     log: `userController.isLoggedIn: ERROR: ${err}`,
+            //     message: { err: 'userController.isLoggedIn: ERROR: Check server logs for details' }
+            // });
+            return next();
+        } else {
+            res.locals.isLoggedIn = true;
+            pool.query('SELECT "username" FROM "user" WHERE "_id" = $1', [req.cookies.ssid], (err, result) => {
+                if (err) {
+                    return next({
+                        log: `userController.isLoggedIn: ERROR: ${err}`,
+                        message: { err: 'userController.isLoggedIn: ERROR: Check server logs for details' }
+                    });
+                }
+                res.locals.currentUser = result.rows[0].username;
+                return next();
             });
         }
-        return next();
+        
     });
 }
 
