@@ -24,6 +24,8 @@ const storage = cloudinaryStorage({
   allowedFormats: ["jpg", "png"],
 });
 
+
+
 /* multer method is passed object with destination and filename properties with functions as values
 object returned is stored as storage
 */
@@ -52,6 +54,8 @@ app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => 
 app.get('/api/outfits', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
   res.status(200).json(res.locals.outfits);
 });
+////////////// CLOUDINARY UPLOAD //////////////
+
 
 
 app.post('/api/items', upload.single('image'), itemsController.addItem, (req, res) => {

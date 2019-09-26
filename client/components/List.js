@@ -75,6 +75,14 @@ class List extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
+
+    // validate form
+
+    this.setState({
+      imageUrl: 'https://res.cloudinary.com/big-eyeball-ll/image/upload/v1569533524/boxer/loading_cjkssb.gif',
+    });
+
     const data = new FormData();
     data.append("type", this.state.type.value);
     data.append("color", this.state.color);
@@ -147,6 +155,7 @@ class List extends Component {
         }, color: 'black'
       })
     };
+    
     return (
       <div>
         <h1>TOPS</h1>
@@ -155,6 +164,11 @@ class List extends Component {
           <div className ="typegroup"> {bottom}</div>
         <h1>SHOES</h1>
           <div className ="typegroup"> {shoes}</div>
+
+<div className="addItemFlexbox">
+  <div className="one"></div>
+  <div className="two">
+
 
           <h2>Add New Item</h2>
           <form encType="multipart/form-data" >
@@ -182,13 +196,17 @@ class List extends Component {
           <button value="Submit" onClick={this.handleSubmit}>Submit</button>
         </form>
 
-{this.state.imageUrl !== '' && (
+
+      </div>
+
+      <div className="three">
+      {this.state.imageUrl !== '' && (
   <div>
     <img src={this.state.imageUrl} alt="not available"/>
-    <br/>
   </div>
   )}
-
+      </div>
+      </div>
       </div>
     );
   }

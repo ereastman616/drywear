@@ -141,3 +141,20 @@ button {
 }
 
 
+.addItemFlexbox {
+  display: flex;
+  align-items: flex-start;
+}
+
+.one {
+  flex: 33%;
+}
+
+.two {
+  flex: 33%;
+}
+
+.three {
+  flex: 33%;
+}
+
