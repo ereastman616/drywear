@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { withRouter } from 'react-router'
 const axios = require('axios');
-import Moment from 'react-moment';
 
 class Outfit extends Component {
 
@@ -11,7 +8,6 @@ class Outfit extends Component {
 
     this.state = {
       selected: this.props.selected,
-      currentUser: 'robb'
     }
     this.handleClick = this.handleClick.bind(this);
     this.checkCurrentDate = this.checkCurrentDate.bind(this);
@@ -24,7 +20,7 @@ class Outfit extends Component {
       top: topId,
       bottom: bottomId,
       shoes: shoesId,
-      user: this.state.currentUser
+      user: this.props.currentUser
     })
     .then(response => {
       this.checkCurrentDate();
@@ -36,7 +32,7 @@ class Outfit extends Component {
 
   // Checks if the user has already slected an outfit of the day.
   checkCurrentDate() {
-    axios.get('/api/outfits/today/' + this.state.currentUser)
+    axios.get('/api/outfits/today/' + this.props.currentUser)
     .then(response => {
       this.setState ({
         selected: response.data
@@ -61,4 +57,4 @@ class Outfit extends Component {
   }
 }
 
-export default withRouter(Outfit);
+export default Outfit;

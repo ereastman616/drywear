@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { withRouter } from 'react-router'
 const axios = require('axios');
 import Moment from 'react-moment';
 

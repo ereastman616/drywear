@@ -21,13 +21,11 @@ class Login extends Component {
   // updates username in state to what the user has typed
   setUsername(value) {
     this.setState({ username: value })
-    console.log(value)
   }
 
   // updates password in state to what the user has typed
   setPassword(value) {
     this.setState({ password: value })
-    console.log(value)
   }
 
   render() {
