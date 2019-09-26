@@ -35,9 +35,6 @@ class App extends Component {
 
     this.handleWeather = this.handleWeather.bind(this);
     this.authenticate = this.authenticate.bind(this);
-    this.homeIsClicked = this.homeIsClicked.bind(this);
-    this.listIsClicked = this.listIsClicked.bind(this);
-    this.historyIsClicked = this.historyIsClicked.bind(this);
   }
 
   componentDidUpdate() {
@@ -145,28 +142,6 @@ class App extends Component {
           </div>
         )
       }
-
-    if(this.state.isListClicked) {
-      return (
-        <div>
-          <button onClick={this.homeIsClicked}>Home</button>
-          <button onClick={this.listIsClicked}>List</button>
-          <button onClick={this.historyIsClicked}>History</button>
-          <List currentUser={this.state.currentUser} />
-        </div>
-      )
-    }
-
-    if(this.state.isHistoryClicked) {
-      return (
-        <div>
-          <button onClick={this.homeIsClicked}>Home</button>
-          <button onClick={this.listIsClicked}>List</button>
-          <button onClick={this.historyIsClicked}>History</button>
-          <History currentUser={this.state.currentUser} />
-        </div>
-      )
-    }
 
     const { weather } = this.state;
       // As long as there are outfits in the outfits array, 
