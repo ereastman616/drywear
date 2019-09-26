@@ -7,6 +7,7 @@ const PORT = 3000;
 const multer = require('multer');
 const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
+const cookieParser = require('cookie-parser');
 
 /* multer method is passed object with destination and filename properties with functions as values
 object returned is stored as storage
@@ -26,7 +27,7 @@ const itemsController = require('./controllers/itemsController');
 const outfitsController = require('./controllers/outfitsController');
 const historyController = require('./controllers/historyController');
 
-
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
