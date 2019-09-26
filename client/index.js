@@ -13,6 +13,22 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 ReactDOM.render(
   <div>
     <Router>
+      {/* <Route exact path="/" render={() => (
+        loggedIn ? (
+          <div>
+          <Redirect to='/home' component={App}/>
+            <div className="navigation">
+              <Link to="/">Home</Link>
+              <Link to="/list">List</Link>
+              <Link to="/history">History</Link>
+            </div>
+            <Route path="/list" component={List} />
+            <Route path="/history" component={History} />
+          </div>
+        ) : (
+          <SignUp/>
+        )
+      )}/> */}
     <div className="navigation">
       <Link to="/">Home</Link>
       <Link to="/list">List</Link>
@@ -25,3 +41,5 @@ ReactDOM.render(
   </div>,
 document.getElementById('root')
 );
+
+// WHY IS THIS HAPPENING!!!!

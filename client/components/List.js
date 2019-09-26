@@ -24,6 +24,7 @@ class List extends Component {
       color: 'light',
       weather: 'cold',
       isFormal: false,
+      currentUser: 'robb'
     }
     this.selectImages = this.selectImages.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +35,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/items')
+    axios.get('/api/items/' + this.state.currentUser)
     .then(response => {
       this.setState ({
         selected: response.data
@@ -43,7 +44,7 @@ class List extends Component {
       console.log(error, '- Check current date outfit exists');
     })
     if (!this.state.selected) {
-      axios.get('/api/items')
+      axios.get('/api/items/' + this.state.currentUser)
       .then(response => {
         this.setState ({
           items: response.data
@@ -69,6 +70,7 @@ class List extends Component {
     data.append("weather", this.state.weather);
     data.append("isFormal", this.state.isFormal);
     data.append("image", this.state.image);
+    data.append("user", this.state.currentUser);
     // Make an AJAX upload request using Axios
     axios.post('/api/items', data)
       .then(response => {

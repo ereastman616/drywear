@@ -11,13 +11,14 @@ class History extends Component {
     super(props);
     this.state = {
       prevOutfits: [],
+      currentUser: 'robb'
     }
 
     this.handleDeletePrevOutfit = this.handleDeletePrevOutfit.bind(this)
   }
 
   componentDidMount() {
-   axios.get('/api/history')
+   axios.get('/api/history/' + this.state.currentUser)
    .then(response => {
      this.setState ({
        prevOutfits: response.data

@@ -2,3 +2,7 @@
 .DS_Store
 .env
 /uploads
+<<<<<<< staging
+package-lock.json
+=======
+>>>>>>> master
