@@ -6,7 +6,7 @@ const userController = {};
 
 userController.verifyUser = (req, res, next) => {
     const username = req.body.username; 
-
+    console.log('inside verifyUser')
     pool.query('SELECT * FROM "user" WHERE username = $1', [username], (err, result) => {
         if (err || !result) {
             // res.redirect('/login');
@@ -66,6 +66,7 @@ userController.createUser = (req, res, next) => {
 userController.startSession = (req, res, next) => {
     const today = new Date();
     console.log('today is', today);
+    console.log('res.locals.sessionId is', res.locals.sessionId)
     pool.query(`INSERT INTO "sessions" ("cookie_id", "created_at") VALUES ($1, $2)`, [res.locals.sessionId, today], (err, result) => {
         if (err) {
             return next({
@@ -80,8 +81,8 @@ userController.startSession = (req, res, next) => {
 
 userController.setSSIDCookie = (req, res, next) => {
     console.log(`Redirect to home page - cookieId is ${res.locals.sessionId}`);
-    res.cookie('ssid', res.locals.sessionId, {httpOnly: true});
-    
+    res.cookie('ssid', res.locals.sessionId, {httpOnly: true, expires: new Date(Date.now() + 30000)});
+    return next();
 }
 
 userController.isLoggedIn = (req, res, next) => {
