@@ -21,7 +21,7 @@ itemsController.getItems = (req, res, next) => {
 // sends back an items object stored on res.locals that has shoes, tops and bottoms properties
 // all shoes are selected, and tops and bottoms that haven't been worn in the last 7 days are selected
 itemsController.availableItems = (req, res, next) => {
-  const { user } = req.body;
+  const { user } = req.params;
 
   pool.query(`SELECT * FROM items WHERE type='shoes' AND "user" = $1`, [user])
     .then(results => {
@@ -35,6 +35,7 @@ itemsController.availableItems = (req, res, next) => {
     })
     .then(results => {
       res.locals.items.bottoms = results.rows;
+      console.log('items is', res.locals.items)
       return next();
     })
     .catch((err) => {
