@@ -29,17 +29,6 @@ object returned is stored as storage
 */
 
 
-
-/*const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, './uploads'))
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-});
-*/
-
 const upload = multer({ storage });
 
 const itemsController = require('./controllers/itemsController');
@@ -64,17 +53,9 @@ app.get('/api/outfits', itemsController.availableItems, outfitsController.setOut
   res.status(200).json(res.locals.outfits);
 });
 
-// cannot upload a new image without getting 400 error
-// returns an image url
+
 app.post('/api/items', upload.single('image'), itemsController.addItem, (req, res) => {
-  console.dir('res.headersSent = ' + res.headersSent);
   if (req.file) {
-    //return res.json({imageUrl: `api/uploads/${req.file.filename}`});
-    //console.log('app.post return with req.file !== undefined.')
-    //res.json({imageUrl: `api/uploads/${req.file.filename}`});
-    //res.sendStatus(201);
-    //res.status(201).send('Saved outfit and updated items date.');
-    //res.redirect(req.get('referer'));
     res.set('Content-Type', 'application/JSON');
     res.status(201);
     res.send();
@@ -82,10 +63,6 @@ app.post('/api/items', upload.single('image'), itemsController.addItem, (req, re
     res.status(409).json('no files');
   }
 });
-
-// app.get('/api/uploads/:file', itemsController.getUploads, (req, res) => {
-//   res.sendFile(path.resolve(__dirname, './uploads/', req.params.file))
-// });
 
 app.post('/api/outfits', outfitsController.saveOutfit, itemsController.updateItemsDate, (req, res) => {
   res.status(200).send('Saved outfit and updated items date.');

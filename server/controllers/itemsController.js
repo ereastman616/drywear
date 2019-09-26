@@ -99,15 +99,15 @@ itemsController.addItem = (req, res, next) => {
   const { secure_url } = req.file;
   const {color, type, weather, isFormal} = req.body;
 
-  pool.query(`INSERT INTO items (image, file, type, weather, formal, color) VALUES('${secure_url}', '${req.file.filename}', '${type}', '${weather}', '${isFormal}', '${color}')`)
+
+  pool.query(`INSERT INTO items (image, file, type, weather, formal, color, date) VALUES('${secure_url}', '${req.file.filename}', '${type}', '${weather}', '${isFormal}', '${color}', (to_timestamp(${Date.now()} / 1000.0)))`)
     .then(resp =>{
-      console.log('successful img upload to db!', resp);
       return next();
     })
     .catch(e => console.error('unsuccessful img insertion to db', e));
 }
 
-// 
+
 itemsController.getUploads = (req, res, next) => {
 
   pool.query(`SELECT image FROM items`, (err, results) => {
