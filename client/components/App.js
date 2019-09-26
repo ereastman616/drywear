@@ -21,6 +21,7 @@ class App extends Component {
       selected: false,
       weather: null,
       todaysOutfit: [],
+      currentUser: "robb"
     }
 
     this.handleWeather = this.handleWeather.bind(this);
@@ -33,7 +34,7 @@ class App extends Component {
     axios.get('')
 
     // When component mounts, set today's outfit
-    axios.get('/api/outfits/today')
+    axios.get('/api/outfits/today/' + this.state.currentUser)
     .then(response => {
       this.setState ({
         selected: response.data.today,
@@ -46,7 +47,7 @@ class App extends Component {
     // Check if today's outfit is selected, change select state to true. 
     // This allows a user to see todays oufit.
     if (!this.state.selected) {
-       axios.get('/api/outfits')
+       axios.get('/api/outfits/' + this.state.currentUser)
        .then(response => {
          this.setState ({
            outfits: response.data
@@ -62,7 +63,8 @@ class App extends Component {
   handleWeather(weather) {
     this.setState({ weather });
     axios.post('/api/filterOutfits', {
-      weather: weather
+      weather: weather,
+      user: this.state.currentUser
     })
     .then(response => {
       this.setState ({

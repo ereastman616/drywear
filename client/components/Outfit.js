@@ -11,6 +11,7 @@ class Outfit extends Component {
 
     this.state = {
       selected: this.props.selected,
+      currentUser: 'robb'
     }
     this.handleClick = this.handleClick.bind(this);
     this.checkCurrentDate = this.checkCurrentDate.bind(this);
@@ -23,6 +24,7 @@ class Outfit extends Component {
       top: topId,
       bottom: bottomId,
       shoes: shoesId,
+      user: this.state.currentUser
     })
     .then(response => {
       this.checkCurrentDate();
@@ -34,7 +36,7 @@ class Outfit extends Component {
 
   // Checks if the user has already slected an outfit of the day.
   checkCurrentDate() {
-    axios.get('/api/outfits/today')
+    axios.get('/api/outfits/today/' + this.state.currentUser)
     .then(response => {
       this.setState ({
         selected: response.data

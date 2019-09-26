@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 ReactDOM.render(
   <div>
     <Router>
-      <Route exact path="/" render={() => (
+      {/* <Route exact path="/" render={() => (
         loggedIn ? (
           <div>
           <Redirect to='/home' component={App}/>
@@ -28,7 +28,7 @@ ReactDOM.render(
         ) : (
           <SignUp/>
         )
-      )}/>
+      )}/> */}
     <div className="navigation">
       <Link to="/">Home</Link>
       <Link to="/list">List</Link>

@@ -36,12 +36,12 @@ app.use('/signup', signupRouter);
 
 
 /* sends back today's outfit (date, ids and images) if there is one and a boolean in res.locals */
-app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => {
+app.get('/api/outfits/today/:user', outfitsController.findTodaysOutfit, (req, res) => {
   return res.status(200).json(res.locals);
 });
 
 // sends back 5 possible outfits as an array of objects
-app.get('/api/outfits', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
+app.get('/api/outfits/:user', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
   return res.status(200).json(res.locals.outfits);
 });
 
@@ -67,11 +67,11 @@ app.post('/api/filterOutfits', itemsController.filterOutfits, outfitsController.
   res.status(200).json(res.locals.outfits);
 });
 
-app.get('/api/items', itemsController.getItems, (req, res) => {
+app.get('/api/items/:user', itemsController.getItems, (req, res) => {
   res.status(200).json(res.locals.items);
 });
 
-app.get('/api/history', historyController.getHistory, (req, res) => {
+app.get('/api/history/:user', historyController.getHistory, (req, res) => {
   res.status(200).json(res.locals.history);
 });
 

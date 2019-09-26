@@ -2,7 +2,7 @@ const { pool } = require('../config')
 const historyController = {};
 
 historyController.getHistory = (req, res, next) => {
-  const { user } = req.body;
+  const { user } = req.params;
   pool.query(`SELECT t1.id, t1.date, t1.top_id, t2.image as top_image, t1.bottom_id, t3.image as bottom_image, t1.shoes_id, t4.image as shoes_image
   FROM outfits as t1
   INNER JOIN items as t2
