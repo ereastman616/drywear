@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import styles from "../index.css";
 const axios = require('axios');
-import Moment from 'react-moment';
 import PreviousOutfit from './PreviousOutfit';
 
 class History extends Component {
@@ -10,16 +7,17 @@ class History extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      prevOutfits: [],
-      currentUser: 'robb'
+      prevOutfits: []
     }
 
     this.handleDeletePrevOutfit = this.handleDeletePrevOutfit.bind(this)
   }
 
   componentDidMount() {
-   axios.get('/api/history/' + this.state.currentUser)
+    console.log('in cdm History props', this.props);
+   axios.get('/api/history/' + this.props.currentUser)
    .then(response => {
+     console.log('response: ', response);
      this.setState ({
        prevOutfits: response.data
      })
