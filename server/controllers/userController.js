@@ -80,7 +80,7 @@ userController.startSession = (req, res, next) => {
 
 userController.setSSIDCookie = (req, res, next) => {
     console.log(`Redirect to home page - cookieId is ${res.locals.sessionId}`);
-    res.cookie('ssid', res.locals.sessionId, {expires: new Date(Date.now() + 30000), httpOnly: true});
+    res.cookie('ssid', res.locals.sessionId, {expires: new Date(Date.now() + 900000), httpOnly: true});
     return next();
 }
 

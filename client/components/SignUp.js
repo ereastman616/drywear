@@ -14,9 +14,8 @@ class SignUp extends Component {
           username: '',
           password: ''
       }
-    this.setUsername = this.setUsername.bind(this);
-    this.setPassword = this.setPassword.bind(this);
-    this.saveUser = this.saveUser.bind(this);
+      this.setUsername = this.setUsername.bind(this);
+      this.setPassword = this.setPassword.bind(this);
     }
 
     // updates username in state to what the user has typed
@@ -27,22 +26,6 @@ class SignUp extends Component {
     // updates password in state to what the user has typed
     setPassword(value) {
       this.setState({ password: value })
-    }
-
-    // adds new username and password to the database
-    saveUser() { // sign up
-      // post req to store username and password from state to database
-      const userData = {
-          username: this.state.username,
-          password: this.state.password
-      };
-      axios.post('/signup', userData)
-      .then((res) => {
-          console.log(res.data);
-      })
-      .catch((err) => {
-          console.log(err);
-      })
     }
 
     render() {
@@ -63,7 +46,9 @@ class SignUp extends Component {
             />
             <Button
               title="Sign up"
-              onClick={this.saveUser}
+              username={this.state.username}
+              password={this.state.password}
+              onClick={this.props.createUser}
               />
         </div>
     )
