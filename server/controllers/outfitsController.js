@@ -49,7 +49,6 @@ outfitsController.findTodaysOutfit = (req, res, next) => {
 
   const today = new Date().toISOString().slice(0,10);
   const { user } = req.params;
-  console.log('user is', user)
 
   pool.query(`SELECT t1.id, t1.date, t1.top_id, t2.image as top_image, t1.bottom_id, t3.image as bottom_image, t1.shoes_id, t4.image as shoes_image
       FROM outfits as t1

@@ -3,7 +3,7 @@ const itemsController = {};
 
 
 itemsController.getItems = (req, res, next) => {
-  const { user } = req.body;
+  const { user } = req.params;
 
   pool.query('SELECT * FROM items WHERE "user" = $1', [user], (err, results) => {
     if (err) {

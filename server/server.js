@@ -67,11 +67,11 @@ app.post('/api/filterOutfits', itemsController.filterOutfits, outfitsController.
   res.status(200).json(res.locals.outfits);
 });
 
-app.get('/api/items', itemsController.getItems, (req, res) => {
+app.get('/api/items/:user', itemsController.getItems, (req, res) => {
   res.status(200).json(res.locals.items);
 });
 
-app.get('/api/history', historyController.getHistory, (req, res) => {
+app.get('/api/history/:user', historyController.getHistory, (req, res) => {
   res.status(200).json(res.locals.history);
 });
 
