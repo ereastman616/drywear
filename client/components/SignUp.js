@@ -14,27 +14,35 @@ class SignUp extends Component {
           username: '',
           password: ''
       }
+    this.setUsername = this.setUsername.bind(this);
+    this.setPassword = this.setPassword.bind(this);
+    this.saveUser = this.saveUser.bind(this);
     }
 
     // updates username in state to what the user has typed
-    setUsername = (value) => {
+    setUsername(value) {
       this.setState({ username: value })
     }
   
     // updates password in state to what the user has typed
-    setPassword = (value) => {
+    setPassword(value) {
       this.setState({ password: value })
     }
 
     // adds new username and password to the database
-    saveUser = async() => { // sign up
+    saveUser() { // sign up
       // post req to store username and password from state to database
       const userData = {
           username: this.state.username,
           password: this.state.password
       };
-      const response = await axios.post('/signup', userData, { headers: { 'Content-Type': 'text/html' } })
-      console.log('saving user data:', response);
+      axios.post('/signup', userData)
+      .then((res) => {
+          console.log(res.data);
+      })
+      .catch((err) => {
+          console.log(err);
+      })
     }
 
     render() {

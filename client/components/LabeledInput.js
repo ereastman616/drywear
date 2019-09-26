@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 
 class LabeledInput extends Component {
-  state = {}
 
- 
   render() {
 
     return (

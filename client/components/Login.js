@@ -14,33 +14,29 @@ class Login extends Component {
       username: '',
       password: ''
     }
+    this.setUsername = this.setUsername.bind(this);
+    this.setPassword = this.setPassword.bind(this);
   }
 
   // updates username in state to what the user has typed
-  setUsername = (value) => {
+  setUsername(value) {
     this.setState({ username: value })
+    console.log(value)
   }
 
   // updates password in state to what the user has typed
-  setPassword = (value) => {
+  setPassword(value) {
     this.setState({ password: value })
-  }
-
-  //checks if username and password match those stored in DB
-  authenticate = () => { 
-    // get req to /login database with username and password
-    
-    // if username and password match, redirect user to homepage
-    // if username or password do not match
+    console.log(value)
   }
 
   render() {
     // render logic (custom styles?)
     // if user is logged in, redirect to home page
-    if (loggedIn) {
-      return <Redirect to="/home" />
-    } else {
-      return (
+    // if (loggedIn) {
+    //   return <Redirect to="/home" />
+    // } else {
+        return (
         <div>
           <h1 className="featured-text">Log in</h1>
           <LabledInput
@@ -56,7 +52,9 @@ class Login extends Component {
           />
           <Button
             title="Log in"
-            onClick={this.authenticate}
+            onClick={this.props.authenticate}
+            username={this.state.username}
+            password={this.state.username}
           />
         </div>
       )
@@ -64,6 +62,5 @@ class Login extends Component {
     }
 
   };
-}
 
 export default Login;
