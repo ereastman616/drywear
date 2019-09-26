@@ -16,7 +16,7 @@ class PreviousOutfit extends Component {
       topId: top_id,
       bottomId: bottom_id,
       shoesId: shoes_id,
-      user: 'robb'
+      user: this.props.currentUser
     })
     .then(response => {
       // this.setState ({

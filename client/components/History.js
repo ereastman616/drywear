@@ -38,7 +38,7 @@ class History extends Component {
     // console.log(this.state.prevOutfits)
     if (this.state.prevOutfits.length > 0){
       this.state.prevOutfits.map((x, index) => {
-        prevOutfits.push(<PreviousOutfit key={index} item={x} handleDeletePrevOutfit={this.handleDeletePrevOutfit} />)
+        prevOutfits.push(<PreviousOutfit key={index} item={x} handleDeletePrevOutfit={this.handleDeletePrevOutfit} currentUser={this.props.currentUser}/>)
       })
     }
 
