@@ -22,7 +22,7 @@ class App extends Component {
     super(props);
     this.state = {
       outfits: [],
-      selected: false,
+      todaysOutfitSelected: false,
       weather: null,
       todaysOutfit: [],
       currentUser: "",
@@ -38,6 +38,8 @@ class App extends Component {
     this.homeIsClicked = this.homeIsClicked.bind(this);
     this.listIsClicked = this.listIsClicked.bind(this);
     this.historyIsClicked = this.historyIsClicked.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.checkCurrentDate = this.checkCurrentDate.bind(this);
   }
 
   componentDidUpdate() {
@@ -50,7 +52,7 @@ class App extends Component {
       axios.get('/api/outfits/today/' + this.state.currentUser)
       .then(response => {
         this.setState ({
-          selected: response.data.today,
+          todaysOutfitSelected: response.data.today,
           todaysOutfit: response.data.outfit,
           rerender: false
         })
@@ -60,7 +62,7 @@ class App extends Component {
 
       // Check if today's outfit is selected, change select state to true. 
       // This allows a user to see todays oufit.
-      if (!this.state.selected) {
+      if (!this.state.todaysOutfitSelected) {
         axios.get('/api/outfits/' + this.state.currentUser)
         .then(response => {
           this.setState ({
@@ -75,6 +77,8 @@ class App extends Component {
     }
 
     componentDidMount() {
+       
+
       // When component mounts, check if there is a current browser session. If there is not, redirect user to
       // sign in page (which has a link to sign up). If there is a session, the following logic holds true:
       // axios.get('')
@@ -82,8 +86,9 @@ class App extends Component {
       // When component mounts, set today's outfit
       axios.get('/api/outfits/today/' + this.state.currentUser)
       .then(response => {
+        console.log
         this.setState ({
-          selected: response.data.today,
+          todaysOutfitSelected: response.data.today,
           todaysOutfit: response.data.outfit,
           rerender: false
         })
@@ -93,7 +98,7 @@ class App extends Component {
 
       // Check if today's outfit is selected, change select state to true. 
       // This allows a user to see todays oufit.
-      if (!this.state.selected) {
+      if (!this.state.todaysOutfitSelected) {
         axios.get('/api/outfits/' + this.state.currentUser)
         .then(response => {
           this.setState ({
@@ -106,7 +111,7 @@ class App extends Component {
         }
     }
 
-  // reassigns 'weather' in state from 'null' to whatever the user has selected, 
+  // reassigns 'weather' in state from 'null' to whatever the user has todaysOutfitSelected, 
   // then filters outfits based on whether they are suited to today's weather.
   handleWeather(weather) {
     this.setState({ weather });
@@ -115,6 +120,7 @@ class App extends Component {
       user: this.state.currentUser
     })
     .then(response => {
+      console.log('in handleWeather response: ', response);
       this.setState ({
         outfits: response.data
       })
@@ -167,8 +173,47 @@ class App extends Component {
       isHistoryClicked: true
     });
   }
-  
-  render(){ 
+
+  /*********************************************** Outfit *****************************************************/
+
+  // Allows user to click on an item. This sends a post request that stores the selected combonation of 
+  // top, bottom, and shoes to the user's history. 
+  handleClick(topId, bottomId, shoesId) {
+    axios.post('/api/outfits', {
+      top: topId,
+      bottom: bottomId,
+      shoes: shoesId,
+      user: this.state.currentUser
+    })
+    .then(response => {
+      this.checkCurrentDate();
+    }).catch(error => {
+      console.log(error, '- Get outfit selection');
+    })
+  }
+
+  // Checks if the user has already slected an outfit of the day.
+  checkCurrentDate() {
+    axios.get('/api/outfits/today/' + this.state.currentUser)
+    .then(response => {
+      console.log(response.data);
+      this.setState ({
+        todaysOutfitSelected: response.data.today,
+        todaysOutfit: response.data.outfit,
+        isHomeClicked: false,
+        isListClicked: false,
+        isHistoryClicked: true
+      })
+    }).catch(error => {
+      console.log(error, '- Check current date outfit exists');
+    })
+  }
+
+  /*********************************************** Outfit *****************************************************/
+
+
+
+  render() { 
       // if loggedIn is false, return login page
       if(!this.state.loggedIn) {
         return (
@@ -181,9 +226,11 @@ class App extends Component {
     if(this.state.isListClicked) {
       return (
         <div>
-          <button onClick={this.homeIsClicked}>Home</button>
-          <button onClick={this.listIsClicked}>List</button>
-          <button onClick={this.historyIsClicked}>History</button>
+          <div className="linkContainer">
+            <button className="link" onClick={this.homeIsClicked}>Home</button>
+            <button className="link" onClick={this.listIsClicked}>List</button>
+            <button className="link" onClick={this.historyIsClicked}>History</button>
+          </div>
           <List currentUser={this.state.currentUser} />
         </div>
       )
@@ -192,9 +239,11 @@ class App extends Component {
     if(this.state.isHistoryClicked) {
       return (
         <div>
-          <button onClick={this.homeIsClicked}>Home</button>
-          <button onClick={this.listIsClicked}>List</button>
-          <button onClick={this.historyIsClicked}>History</button>
+          <div className="linkContainer">
+            <button className="link" onClick={this.homeIsClicked}>Home</button>
+            <button className="link" onClick={this.listIsClicked}>List</button>
+            <button className="link" onClick={this.historyIsClicked}>History</button>
+          </div>
           <History currentUser={this.state.currentUser} />
         </div>
       )
@@ -206,7 +255,7 @@ class App extends Component {
       const outfits = [];
       if(this.state.outfits.length > 0){
         this.state.outfits.map((x, index) => {
-          outfits.push(<Outfit key={index} item={x} selected={this.state.selected} currentUser={this.state.currentUser} />)
+          outfits.push(<Outfit key={index} item={x} handleClick={this.handleClick} />)
         })
       }
     
@@ -228,14 +277,16 @@ class App extends Component {
       
     return (
       <div>
-        <button onClick={this.homeIsClicked}>Home</button>
-        <button onClick={this.listIsClicked}>List</button>
-        <button onClick={this.historyIsClicked}>History</button>
+        <div className="linkContainer">
+          <button className="link" onClick={this.homeIsClicked}>Home</button>
+          <button className="link" onClick={this.listIsClicked}>List</button>
+          <button className="link" onClick={this.historyIsClicked}>History</button>
+        </div>
         <div>
-          { this.state.selected ? (
+          { this.state.todaysOutfitSelected ? (
             <div>
             <h1 className="featured-text">Today's outfit has already been selected</h1>
-            <FeaturedOutfit item={this.state.todaysOutfit[0]} selected={this.state.selected} />
+            <FeaturedOutfit item={this.state.todaysOutfit[0]} todaysOutfitSelected={this.state.todaysOutfitSelected} />
             </div>
           ) : (
             <div>

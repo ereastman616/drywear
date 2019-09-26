@@ -27,11 +27,11 @@ itemsController.availableItems = (req, res, next) => {
     .then(results => {
       res.locals.items = {};
       res.locals.items.shoes = results.rows;
-      return pool.query(`SELECT * FROM items WHERE type = 'top' AND date < NOW() - INTERVAL '7 days' AND "user" = $1`, [user]);
+      return pool.query(`SELECT * FROM items WHERE type = 'top' AND "user" = $1`, [user]);
     })
     .then(results => {
       res.locals.items.tops = results.rows;
-      return pool.query(`SELECT * FROM items WHERE type = 'bottom' AND date < NOW() - INTERVAL '7 days' AND "user" = $1`, [user]);
+      return pool.query(`SELECT * FROM items WHERE type = 'bottom' AND "user" = $1`, [user]);
     })
     .then(results => {
       res.locals.items.bottoms = results.rows;
@@ -58,15 +58,15 @@ itemsController.filterOutfits = (req, res, next) => {
   // and stores in res.locals then pass to the next midware
   pool.query(`SELECT * FROM items WHERE type='shoes'${filter} AND "user" = $1`, [user])
     .then(results => {
-      // results contains all the shoes that has same whether value with passed one
+      // results contains all the shoes that has sarme whether value with passed one
       res.locals.items = {};
       res.locals.items.shoes = results.rows;
-      return pool.query(`SELECT * FROM items WHERE type = 'top'${filter}AND date < NOW() - INTERVAL '7 days' AND "user" = $1`, [user])
+      return pool.query(`SELECT * FROM items WHERE type = 'top'${filter} AND "user" = $1`, [user])
     })
     .then(results => {
       // results contains all the tops that has same whether value with passed one
       res.locals.items.tops = results.rows;
-      return pool.query(`SELECT * FROM items WHERE type = 'bottom'${filter}AND date < NOW() - INTERVAL '7 days' AND "user" = $1`, [user])
+      return pool.query(`SELECT * FROM items WHERE type = 'bottom'${filter} AND "user" = $1`, [user])
     })
     .then(results => {
       // results contains all the bottoms that has same whether value with passed one
