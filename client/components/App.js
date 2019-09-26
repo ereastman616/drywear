@@ -35,13 +35,16 @@ class App extends Component {
 
     this.handleWeather = this.handleWeather.bind(this);
     this.authenticate = this.authenticate.bind(this);
+    this.homeIsClicked = this.homeIsClicked.bind(this);
+    this.listIsClicked = this.listIsClicked.bind(this);
+    this.historyIsClicked = this.historyIsClicked.bind(this);
   }
 
   componentDidUpdate() {
     if(this.state.rerender) {
       // When component mounts, check if there is a current browser session. If there is not, redirect user to
       // sign in page (which has a link to sign up). If there is a session, the following logic holds true:
-      axios.get('')
+      // axios.get('')
 
       // When component mounts, set today's outfit
       axios.get('/api/outfits/today/' + this.state.currentUser)
@@ -69,6 +72,38 @@ class App extends Component {
         })
         }
       }
+    }
+
+    componentDidMount() {
+      // When component mounts, check if there is a current browser session. If there is not, redirect user to
+      // sign in page (which has a link to sign up). If there is a session, the following logic holds true:
+      // axios.get('')
+
+      // When component mounts, set today's outfit
+      axios.get('/api/outfits/today/' + this.state.currentUser)
+      .then(response => {
+        this.setState ({
+          selected: response.data.today,
+          todaysOutfit: response.data.outfit,
+          rerender: false
+        })
+      }).catch(error => {
+        console.log(error, '- Check current date outfit exists');
+      })
+
+      // Check if today's outfit is selected, change select state to true. 
+      // This allows a user to see todays oufit.
+      if (!this.state.selected) {
+        axios.get('/api/outfits/' + this.state.currentUser)
+        .then(response => {
+          this.setState ({
+            outfits: response.data,
+            rerender: false
+          })
+        }).catch(error => {
+          console.log(error, '- Get outfit selections');
+        })
+        }
     }
 
   // reassigns 'weather' in state from 'null' to whatever the user has selected, 
@@ -143,6 +178,28 @@ class App extends Component {
         )
       }
 
+    if(this.state.isListClicked) {
+      return (
+        <div>
+          <button onClick={this.homeIsClicked}>Home</button>
+          <button onClick={this.listIsClicked}>List</button>
+          <button onClick={this.historyIsClicked}>History</button>
+          <List currentUser={this.state.currentUser} />
+        </div>
+      )
+    }
+
+    if(this.state.isHistoryClicked) {
+      return (
+        <div>
+          <button onClick={this.homeIsClicked}>Home</button>
+          <button onClick={this.listIsClicked}>List</button>
+          <button onClick={this.historyIsClicked}>History</button>
+          <History currentUser={this.state.currentUser} />
+        </div>
+      )
+    }
+
     const { weather } = this.state;
       // As long as there are outfits in the outfits array, 
       // iterate through the array and create an outfit component for each outfit.
@@ -203,5 +260,4 @@ class App extends Component {
     )
   }
 }
-
 export default App;
