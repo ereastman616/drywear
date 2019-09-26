@@ -4,7 +4,7 @@ function Button(props) {
     return (
       <button
         type="button"
-        onClick={props.onClick}
+        onClick={() => props.onClick(props.username, props.password)}
       >
         {props.title}
       </button>
