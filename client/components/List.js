@@ -84,6 +84,7 @@ class List extends Component {
     // Make an AJAX upload request using Axios
     axios.post('/api/items', data)
       .then(response => {
+        console.log('/n/n/nhandleSubmit > response: ', response);
         this.setState({
           imageUrl: response.data.imageUrl,
         });
@@ -181,12 +182,12 @@ class List extends Component {
           <button value="Submit" onClick={this.handleSubmit}>Submit</button>
         </form>
 
-        {this.state.imageUrl && (
-        <div>
-          <img src={BASE_URL + this.state.imageUrl} alt="not available"/>
-          <br/>
-        </div>
-        )}
+{this.state.imageUrl !== '' && (
+  <div>
+    <img src={this.state.imageUrl} alt="not available"/>
+    <br/>
+  </div>
+  )}
 
       </div>
     );

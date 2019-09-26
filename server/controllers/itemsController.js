@@ -97,6 +97,7 @@ itemsController.updateItemDates  = (req, res, next) => {
 // properties sent from the client in req.body are inserted into database
 itemsController.addItem = (req, res, next) => {
   const { secure_url } = req.file;
+  res.locals.imageUrl = secure_url;
   const {color, type, weather, isFormal} = req.body;
 
 

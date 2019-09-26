@@ -56,11 +56,14 @@ app.get('/api/outfits', itemsController.availableItems, outfitsController.setOut
 
 app.post('/api/items', upload.single('image'), itemsController.addItem, (req, res) => {
   if (req.file) {
-    res.set('Content-Type', 'application/JSON');
-    res.status(201);
-    res.send();
+    //res.set('Content-Type', 'application/JSON');
+    //res.status(201);
+    //res.send();
+    console.log('res.locals.imageUrl : ', res.locals.imageUrl );
+    res.json({ imageUrl: res.locals.imageUrl });
+    
   } else {
-    res.status(409).json('no files');
+    res.sendStatus(409).json('no files');
   }
 });
 
