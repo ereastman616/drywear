@@ -5,6 +5,8 @@ const axios = require('axios');
 import Outfit from './Outfit';
 import FeaturedOutfit from './FeaturedOutfit';
 import Select from 'react-select';
+import Login from './Login';
+import SignUp from './SignUp';
 
 
 const options = [
@@ -21,14 +23,17 @@ class App extends Component {
       selected: false,
       weather: null,
       todaysOutfit: [],
-      currentUser: "robb"
+      currentUser: "robb",
+      loggedIn: false,
+      rerender: false
     }
 
     this.handleWeather = this.handleWeather.bind(this);
+    this.authenticate = this.authenticate.bind(this);
   }
 
-  componentDidMount() {
-
+  componentDidUpdate() {
+    if(this.state.rerender) {
     // When component mounts, check if there is a current browser session. If there is not, redirect user to
     // sign in page (which has a link to sign up). If there is a session, the following logic holds true:
     axios.get('')
@@ -38,7 +43,8 @@ class App extends Component {
     .then(response => {
       this.setState ({
         selected: response.data.today,
-        todaysOutfit: response.data.outfit
+        todaysOutfit: response.data.outfit,
+        rerender: false
       })
     }).catch(error => {
       console.log(error, '- Check current date outfit exists');
@@ -50,13 +56,15 @@ class App extends Component {
        axios.get('/api/outfits/' + this.state.currentUser)
        .then(response => {
          this.setState ({
-           outfits: response.data
+           outfits: response.data,
+           rerender: false
          })
        }).catch(error => {
          console.log(error, '- Get outfit selections');
        })
       }
     }
+  }
 
   // reassigns 'weather' in state from 'null' to whatever the user has selected, 
   // then filters outfits based on whether they are suited to today's weather.
@@ -75,6 +83,36 @@ class App extends Component {
     })
   }
 
+  //checks if username and password match those stored in DB
+  authenticate(username, password) { 
+    console.log(username, password)
+    // post req to /login database with username and password
+    axios.post('/login', {username, password})
+    .then((res)=> {
+      console.log(res)
+        if(res.data === 'verified') {
+          this.setState({currentUser: username, loggedIn: true, rerender: true});
+        }  
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    
+    // , (err, res) => {
+    //   if(err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log(res)
+    //     if(res.data === 'verified') {
+    //       this.setState({currentUser: username, loggedIn: true});
+    //     }
+    //   }
+    // })
+    
+
+    // if username and password match, redirect user to homepage
+    // if username or password do not match
+  }
 
   render() {
 
@@ -105,7 +143,15 @@ class App extends Component {
         }, color: 'black'
       })
     };
-
+  // if loggedIn is false, return login page
+  if(!this.state.loggedIn) {
+    console.log('inside conditional')
+    return (
+      <div>
+        <Login authenticate={this.authenticate}/>
+      </div>
+    )
+  }
     return (
       <div>
       { this.state.selected ? (
