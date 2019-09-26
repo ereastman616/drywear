@@ -35,6 +35,7 @@ itemsController.availableItems = (req, res, next) => {
     })
     .then(results => {
       res.locals.items.bottoms = results.rows;
+      console.log('items is', res.locals.items)
       return next();
     })
     .catch((err) => {
