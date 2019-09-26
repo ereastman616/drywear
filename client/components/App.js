@@ -80,38 +80,50 @@ class App extends Component {
     }
 
     componentDidMount() {
-       
+       axios.get('/login')
+       .then((res) => {
+         const { currentUser, isLoggedIn } = res.data;
+          if(currentUser) {
+            axios.get('/api/outfits/today/' + currentUser)
+            .then(response => {
+              this.setState ({
+                todaysOutfitSelected: response.data.today,
+                todaysOutfit: response.data.outfit,
+                currentUser,
+                loggedIn: isLoggedIn,
+                rerender: true
+              })
+            }).catch(error => {
+              console.log(error, '- Check current date outfit exists');
+            })
+      
+            // Check if today's outfit is selected, change select state to true. 
+            // This allows a user to see todays oufit.
+            if (!this.state.todaysOutfitSelected) {
+              axios.get('/api/outfits/' + currentUser)
+              .then(response => {
+                this.setState ({
+                  outfits: response.data,
+                  currentUser,
+                  loggedIn: isLoggedIn,
+                  rerender: true
+                })
+              }).catch(error => {
+                console.log(error, '- Get outfit selections');
+              })
+            }
+          } else {
+            this.setState({
+              loggedIn: isLoggedIn
+            })
+          }
+       })
 
       // When component mounts, check if there is a current browser session. If there is not, redirect user to
       // sign in page (which has a link to sign up). If there is a session, the following logic holds true:
       // axios.get('')
 
       // When component mounts, set today's outfit
-      axios.get('/api/outfits/today/' + this.state.currentUser)
-      .then(response => {
-        console.log
-        this.setState ({
-          todaysOutfitSelected: response.data.today,
-          todaysOutfit: response.data.outfit,
-          rerender: false
-        })
-      }).catch(error => {
-        console.log(error, '- Check current date outfit exists');
-      })
-
-      // Check if today's outfit is selected, change select state to true. 
-      // This allows a user to see todays oufit.
-      if (!this.state.todaysOutfitSelected) {
-        axios.get('/api/outfits/' + this.state.currentUser)
-        .then(response => {
-          this.setState ({
-            outfits: response.data,
-            rerender: false
-          })
-        }).catch(error => {
-          console.log(error, '- Get outfit selections');
-        })
-        }
     }
 
   // reassigns 'weather' in state from 'null' to whatever the user has todaysOutfitSelected, 
@@ -123,7 +135,6 @@ class App extends Component {
       user: this.state.currentUser
     })
     .then(response => {
-      console.log('in handleWeather response: ', response);
       this.setState ({
         outfits: response.data
       })
