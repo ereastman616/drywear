@@ -50,14 +50,26 @@ itemsController.filterOutfits = (req, res, next) => {
   let filter = '';
   const { weather, user } = req.body;
 
+<<<<<<< staging
   // when the whether option is selected, add the condition to the query
   if (weather) {
     filter = ` AND weather = '${weather.value}' `;
+=======
+  let filter = '';
+
+  // when the whether option is selected, add the condition to the query
+  if (req.body.weather) {
+    filter = ` AND weather = '${req.body.weather.value}' `;
+>>>>>>> master
   }
 
   // create items object to store the filtered shoes, bottoms, and tops
   // and stores in res.locals then pass to the next midware
+<<<<<<< staging
   pool.query(`SELECT * FROM items WHERE type='shoes'${filter} AND "user" = $1`, [user])
+=======
+  pool.query(`SELECT * FROM items WHERE type='shoes'${filter}`)
+>>>>>>> master
     .then(results => {
       // results contains all the shoes that has same whether value with passed one
       res.locals.items = {};
@@ -134,6 +146,7 @@ itemsController.addItem = (req, res, next) => {
     });
 }
 
+<<<<<<< staging
 // itemsController.getUploads = (req, res, next) => {
 
 //   pool.query(`SELECT image FROM items`, (err, results) => {
@@ -143,6 +156,18 @@ itemsController.addItem = (req, res, next) => {
 //     next();
 //   })
 // }
+=======
+// 
+itemsController.getUploads = (req, res, next) => {
+
+  pool.query(`SELECT image FROM items`, (err, results) => {
+    if (err) return next({log: 'Error getting images from DB', message: 'Error in getUploads'});
+    console.log('results is', results)
+    res.locals.uploads = results.rows[2].imgfile_name;
+    next();
+  })
+}
+>>>>>>> master
 
 
 module.exports = itemsController;
