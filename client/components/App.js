@@ -27,6 +27,7 @@ class App extends Component {
       todaysOutfit: [],
       currentUser: "",
       loggedIn: false,
+      signUp: false,
       rerender: false,
       isHomeClicked: true,
       isHistoryClicked: false,
@@ -35,6 +36,8 @@ class App extends Component {
 
     this.handleWeather = this.handleWeather.bind(this);
     this.authenticate = this.authenticate.bind(this);
+    this.signUpClicked = this.signUpClicked.bind(this);
+    this.createUser = this.createUser.bind(this);
     this.homeIsClicked = this.homeIsClicked.bind(this);
     this.listIsClicked = this.listIsClicked.bind(this);
     this.historyIsClicked = this.historyIsClicked.bind(this);
@@ -147,6 +150,30 @@ class App extends Component {
     })
   }
 
+  signUpClicked(e) {
+    e.preventDefault();
+    this.setState({
+      signUp: true
+    })
+  }
+
+  // adds new username and password to the database
+  createUser(username, password) { // sign up
+    // post req to store username and password from state to database
+    axios.post('/signup', {username, password})
+    .then((res) => {
+        console.log(res.data);
+        this.setState({
+          currentUser: username,
+          signUp: false,
+          loggedIn: true
+        })
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+  }
+
   homeIsClicked(e) {
     e.preventDefault();
     this.setState({
@@ -215,10 +242,19 @@ class App extends Component {
 
   render() { 
       // if loggedIn is false, return login page
-      if(!this.state.loggedIn) {
+      if(!this.state.loggedIn && !this.state.signUp) {
         return (
           <div>
             <Login authenticate={this.authenticate}/>
+            <a href="#" className="signUpLink" onClick={this.signUpClicked}>New to D.R.Y. Wear?</a> 
+          </div>
+        )
+      }
+
+      if(this.state.signUp) {
+        return (
+          <div>
+            <SignUp createUser={this.createUser} />
           </div>
         )
       }
