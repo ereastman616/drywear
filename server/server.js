@@ -7,6 +7,7 @@ const PORT = 3000;
 const multer = require('multer');
 const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
+const cookieParser = require('cookie-parser');
 
 // Cloudinarty.com image hosting modules 
 const cloudinary = require("cloudinary");
@@ -37,7 +38,7 @@ const itemsController = require('./controllers/itemsController');
 const outfitsController = require('./controllers/outfitsController');
 const historyController = require('./controllers/historyController');
 
-
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
@@ -45,14 +46,15 @@ app.use(cors());
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 
+
 /* sends back today's outfit (date, ids and images) if there is one and a boolean in res.locals */
-app.get('/api/outfits/today', outfitsController.findTodaysOutfit, (req, res) => {
-  res.status(200).json(res.locals);
+app.get('/api/outfits/today/:user', outfitsController.findTodaysOutfit, (req, res) => {
+  return res.status(200).json(res.locals);
 });
 
 // sends back 5 possible outfits as an array of objects
-app.get('/api/outfits', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
-  res.status(200).json(res.locals.outfits);
+app.get('/api/outfits/:user', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
+  return res.status(200).json(res.locals.outfits);
 });
 ////////////// CLOUDINARY UPLOAD //////////////
 
@@ -80,11 +82,11 @@ app.post('/api/filterOutfits', itemsController.filterOutfits, outfitsController.
   res.status(200).json(res.locals.outfits);
 });
 
-app.get('/api/items', itemsController.getItems, (req, res) => {
+app.get('/api/items/:user', itemsController.getItems, (req, res) => {
   res.status(200).json(res.locals.items);
 });
 
-app.get('/api/history', historyController.getHistory, (req, res) => {
+app.get('/api/history/:user', historyController.getHistory, (req, res) => {
   res.status(200).json(res.locals.history);
 });
 

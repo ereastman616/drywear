@@ -13,7 +13,7 @@ class FeaturedOutfit extends Component {
 
   render() {
 
-    const { top_image, bottom_image, shoes_image, date, id, top_id, bottom_id, shoes_id } = this.props.item;
+    const { top_image, bottom_image, shoes_image } = this.props.item;
 
     return (
       <div className="featured-outfit">
