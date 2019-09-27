@@ -9,17 +9,28 @@ const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
 const cookieParser = require('cookie-parser');
 
+// Cloudinarty.com image hosting modules 
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "boxer",
+  allowedFormats: ["jpg", "png"],
+});
+
+
+
 /* multer method is passed object with destination and filename properties with functions as values
 object returned is stored as storage
 */
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, './uploads'))
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-});
+
 
 const upload = multer({ storage });
 
@@ -45,19 +56,22 @@ app.get('/api/outfits/today/:user', outfitsController.findTodaysOutfit, (req, re
 app.get('/api/outfits/:user', itemsController.availableItems, outfitsController.setOutfits, (req, res) => {
   return res.status(200).json(res.locals.outfits);
 });
+////////////// CLOUDINARY UPLOAD //////////////
 
-// cannot upload a new image without getting 400 error
-// returns an image url
+
+
 app.post('/api/items', upload.single('image'), itemsController.addItem, (req, res) => {
   if (req.file) {
-    return res.json({imageUrl: `api/uploads/${req.file.filename}`});
+    //res.set('Content-Type', 'application/JSON');
+    //res.status(201);
+    //res.send();
+    console.log('res.locals.imageUrl : ', res.locals.imageUrl );
+    res.json({ imageUrl: res.locals.imageUrl });
+    
+  } else {
+    res.sendStatus(409).json('no files');
   }
-  res.status(409).json('no files')
 });
-
-// app.get('/api/uploads/:file', itemsController.getUploads, (req, res) => {
-//   res.sendFile(path.resolve(__dirname, './uploads/', req.params.file))
-// });
 
 app.post('/api/outfits', outfitsController.saveOutfit, itemsController.updateItemsDate, (req, res) => {
   res.status(200).send('Saved outfit and updated items date.');

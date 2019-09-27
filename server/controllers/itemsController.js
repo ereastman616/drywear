@@ -118,10 +118,11 @@ itemsController.updateItemDates  = (req, res, next) => {
 
 // properties sent from the client in req.body are inserted into database
 itemsController.addItem = (req, res, next) => {
-
+  const { secure_url } = req.file;
+  res.locals.imageUrl = secure_url;
   const {color, type, weather, isFormal, user} = req.body;
 
-  pool.query(`INSERT INTO items (file, type, weather, formal, color, "user") VALUES ($1, $2, $3, $4, $5, $6)`, [req.file.filename, type, weather, isFormal, color, user])
+  pool.query(`INSERT INTO items (image, file, type, weather, formal, color, "user") VALUES ($1, $2, $3, $4, $5, $6, $7)`, [secure_url, req.file.filename, type, weather, isFormal, color, user])
     .then(res =>{
       return next();
     })
@@ -134,7 +135,6 @@ itemsController.addItem = (req, res, next) => {
 }
 
 // itemsController.getUploads = (req, res, next) => {
-
 //   pool.query(`SELECT image FROM items`, (err, results) => {
 //     if (err) return next({log: 'Error getting images from DB', message: 'Error in getUploads'});
 //     console.log('results is', results)

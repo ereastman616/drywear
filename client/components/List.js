@@ -31,6 +31,18 @@ class List extends Component {
     this.setColor = this.setColor.bind(this);
     this.setWeather = this.setWeather.bind(this);
     this.setFormal = this.setFormal.bind(this);
+    this.reloadItems = this.reloadItems.bind(this);
+  }
+
+  reloadItems() {
+    axios.get('/api/items')
+    .then(response => {
+      this.setState ({
+        items: response.data
+      })
+    }).catch(error => {
+      console.log(error, '- Get outfit selections');
+    })
   }
 
   componentDidMount() {
@@ -63,6 +75,14 @@ class List extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
+
+    // validate form
+
+    this.setState({
+      imageUrl: 'https://res.cloudinary.com/big-eyeball-ll/image/upload/v1569533524/boxer/loading_cjkssb.gif',
+    });
+
     const data = new FormData();
     data.append("type", this.state.type.value);
     data.append("color", this.state.color);
@@ -73,9 +93,11 @@ class List extends Component {
     // Make an AJAX upload request using Axios
     axios.post('/api/items', data)
       .then(response => {
+        console.log('/n/n/nhandleSubmit > response: ', response);
         this.setState({
           imageUrl: response.data.imageUrl,
         });
+        this.reloadItems();
       })
       .catch(err => alert(err.message));
   }
@@ -134,6 +156,7 @@ class List extends Component {
         }, color: 'black'
       })
     };
+    
     return (
       <div>
         <h1>TOPS</h1>
@@ -142,6 +165,11 @@ class List extends Component {
           <div className ="typegroup"> {bottom}</div>
         <h1>SHOES</h1>
           <div className ="typegroup"> {shoes}</div>
+
+<div className="addItemFlexbox">
+  <div className="one"></div>
+  <div className="two">
+
 
           <h2>Add New Item</h2>
           <form encType="multipart/form-data" >
@@ -169,19 +197,23 @@ class List extends Component {
           <button value="Submit" onClick={this.handleSubmit}>Submit</button>
         </form>
 
-        {this.state.imageUrl && (
-        <div>
-          <img src={BASE_URL + this.state.imageUrl} alt="not available"/>
-          <br/>
-        </div>
-        )}
 
+      </div>
+
+      <div className="three">
+      {this.state.imageUrl !== '' && (
+  <div>
+    <img src={this.state.imageUrl} alt="not available"/>
+  </div>
+  )}
+      </div>
+      </div>
       </div>
     );
   }
 }
 
 function indvoutfit(props){
-  return <img className = "listimage" src={props.image} />
+  return <img className = "listimage" src={props.image} key={props.image}/>
 }
 export default List;
